@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myweb
+  labels:
+    env: testing
+spec:
+  ports:
+    - port: 80
+  selector:
+    env: testing
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myweb-pv-claim
+  labels:
+    env: testing
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: myweb
+  labels:
+    env: testing
+spec:
+  selector:
+    matchLabels:
+      env: testing
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        env: testing
+    spec:
+      containers:
+      - image: httpd:latest
+        name: myweb
+        ports:
+        - containerPort: 80
+          name: myweb
+        volumeMounts:
+        - name: myweb-persistent-storage
+          mountPath: /usr/local/apache2/htdocs/
+      volumes:
+      - name: myweb-persistent-storage
+        persistentVolumeClaim:
+          claimName: myweb-pv-claim
