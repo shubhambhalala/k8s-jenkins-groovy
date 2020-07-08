@@ -7,7 +7,7 @@ job("github-download") {
 		githubPush()
 	}
 	steps {
-		shell(readFileFromWorkspace("download.sh")
+		shell(readFileFromWorkspace("download.sh"))
 	}
 }
 
@@ -30,7 +30,7 @@ job("testing-deployment") {
 		upstream("classify-code",threshold = 'SUCCESS')
 	}
 	steps {
-		shell(readFileFromWorkspace("testing.sh")
+		shell(readFileFromWorkspace("testing.sh"))
 	}
 }
 
@@ -40,7 +40,7 @@ job("production-deployment") {
 		upstream("testing-deployment",threshold = 'SUCCESS')
 	}
 	steps {
-		shell(readFileFromWorkspace("deployment.sh")
+		shell(readFileFromWorkspace("deployment.sh"))
 	}
 }
 
